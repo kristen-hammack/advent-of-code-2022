@@ -1,6 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-var elfCalories = (await File.OpenText("input.txt")
+var elfCalories = (await File.OpenText("Day1input.txt")
         .ReadToEndAsync()).Split("\n\n")
     .Select(s => s.Trim())
     .Select(s => s.Split("\n")
