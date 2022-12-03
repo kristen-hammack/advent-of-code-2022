@@ -1,4 +1,6 @@
-﻿namespace AoC2022;
+﻿using System.Data.SqlTypes;
+
+namespace AoC2022;
 
 public class Day2
 {
@@ -8,8 +10,7 @@ public class Day2
             StringSplitOptions.RemoveEmptyEntries);
         //x=1, y=2, z=3
         //x>c, y>a, z>b
-        Console.WriteLine(input.Select(s => (RPS)s[2] > (RPS)s[0] ? 6 : (RPS)s[0] == (RPS)s[2] ? 3 : 0).Sum() +
-                          input.Select(s => s[2]).Select(c => c == 'Z' ? 3 : c == 'Y' ? 2 : 1).Sum());
+        Console.WriteLine(input.Select(s => ((RPS)s[0]).Points(s[2])).Sum());
     }
 }
 
@@ -21,6 +22,45 @@ public class RPS
     {
         C = c switch { 'X' or 'A' => 'R', 'Y' or 'B' => 'P', 'Z' or 'C' => 'S', _ => '_' }
     };
+
+    public int Points(char xyz)
+    {
+        return xyz switch { 'X' => Lose(), 'Y' => Draw(), 'Z' => Win(), _ => 0 };
+    }
+
+    private int Win()
+    {
+        return
+            C switch
+            {
+                'R' => 2,
+                'P' => 3,
+                'S' => 1,
+                _ => 0
+            } + 6;
+    }
+
+    private int Lose()
+    {
+        return C switch
+        {
+            'R' => 3,
+            'P' => 1,
+            'S' => 2,
+            _ => 0
+        };
+    }
+
+    private int Draw()
+    {
+        return C switch
+        {
+            'R' => 1,
+            'P' => 2,
+            'S' => 3,
+            _ => 0
+        } + 3;
+    }
     
     public static bool operator >(RPS r, RPS p)
     {
