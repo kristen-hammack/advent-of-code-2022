@@ -1,28 +1,38 @@
-﻿namespace aoc;
+﻿namespace AoC2022;
 
 public class Day2
 {
-    public async Task Do()
+    public static async Task Do()
     {
-        var input =(await File.OpenText("Day1input.txt").ReadToEndAsync()).Split("\n");
+        var input = (await File.OpenText("Day2input.txt").ReadToEndAsync()).Split("\n",
+            StringSplitOptions.RemoveEmptyEntries);
         //x=1, y=2, z=3
         //x>c, y>a, z>b
-        
+        Console.WriteLine(input.Select(s => (RPS)s[2] > (RPS)s[0] ? 6 : (RPS)s[0] == (RPS)s[2] ? 3 : 0).Sum() +
+                          input.Select(s => s[2]).Select(c => c == 'Z' ? 3 : c == 'Y' ? 2 : 1).Sum());
     }
-    
 }
 
-public class rps
+public class RPS
 {
-    public char C { get; set; }
+    private char C { get; set; }
 
-    public static implicit operator rps(char c) => new() { C = c };
-    
-    public static bool operator >(rps r, rps p)
+    public static explicit operator RPS(char c) => new()
     {
-        return r != p && (r.C == 'x' ? p.C == 'c' : r.C == 'y' ? p.C == 'a' : p.C == 'b');
+        C = c switch { 'X' or 'A' => 'R', 'Y' or 'B' => 'P', 'Z' or 'C' => 'S', _ => '_' }
+    };
+    
+    public static bool operator >(RPS r, RPS p)
+    {
+        return r != p && (r.C switch
+        {
+            'R' => p.C == 'S',
+            'P' => p.C == 'R',
+            'S' => p.C == 'P',
+            _ => false
+        });
     }
-    public static bool operator <(rps r, rps p) => !(r > p) && r != p;
-    public static bool operator ==(rps r, rps p) => r.C == p.C;
-    public static bool operator !=(rps r, rps p) => r.C != p.C;
+    public static bool operator <(RPS r, RPS p) => !(r > p) && r != p;
+    public static bool operator ==(RPS r, RPS p) => r.C == p.C;
+    public static bool operator !=(RPS r, RPS p) => r.C != p.C;
 }
