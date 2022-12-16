@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.IO.Compression;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace AoC2022;
 
